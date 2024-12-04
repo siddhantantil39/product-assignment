@@ -22,7 +22,7 @@ const ProductModal = (modalProps: ModalProps) => {
     const debouncedQuery = useDebounce(query, 500);
 
     // const [products, setProducts] = useState<Product[]>(initialProducts);
-    const {products, dispatch, getSelectedProducts, getSelectedVariants, setProducts} = useProducts();
+    const {products,setProducts} = useProducts();
 
 
     const getProducts = async () => {
