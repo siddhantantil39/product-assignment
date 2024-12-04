@@ -5,6 +5,8 @@ export interface Product {
     id: string;
     title: string;
     variants: Variant[];
-    image: Image
+    image: Image;
+    selected: boolean;
+    partial: boolean;
 
 }

@@ -3,4 +3,5 @@ export interface Variant{
     product_id: string;
     title: string;
     price: string;
+    selected: boolean;
 }

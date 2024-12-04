@@ -2,18 +2,12 @@ import { ReactNode, useEffect, useState } from "react";
 import SearchProducts from "./SearchProducts";
 import { Product } from "../types/Product";
 import ProductItem from "./ProductItem";
+import { debounce } from 'lodash';
+import { useDebounce } from "../hooks/useDebounce";
+import useProducts from "../hooks/useProducts";
+import { initialProducts } from "../providers/productContext";
 
 
-const initialProducts: Product[] = [{
-    id: "",
-    title: "",
-    variants: [],
-    image: {
-        id: "",
-        product_id: "",
-        src: ""
-    }
-}];
 
 interface ModalProps {
     isOpen: boolean,
@@ -25,12 +19,15 @@ const ProductModal = (modalProps: ModalProps) => {
 
     const {isOpen, onClose, children} = modalProps;
     const [query, setQuery] = useState('');
+    const debouncedQuery = useDebounce(query, 500);
 
-    const [products, setProducts] = useState<Product[]>(initialProducts);
+    // const [products, setProducts] = useState<Product[]>(initialProducts);
+    const {products, dispatch, getSelectedProducts, getSelectedVariants, setProducts} = useProducts();
+
 
     const getProducts = async () => {
         const response = fetch('https://stageapi.monkcommerce.app/task/products/search?' + new URLSearchParams({
-            search: query, page: '0'
+            search: debouncedQuery, page: '0', limit: '10'
         }).toString(), {
             method: 'GET',
             headers: {
@@ -52,10 +49,11 @@ const ProductModal = (modalProps: ModalProps) => {
 
     };
 
-
     useEffect(()=>{
-        getProducts();
-    }, [query]);
+        if(debouncedQuery){
+            getProducts();
+        }
+    }, [debouncedQuery]);
 
     if(!isOpen) return null;
 
@@ -77,12 +75,13 @@ const ProductModal = (modalProps: ModalProps) => {
                 <SearchProducts query={query} setQuery={setQuery}/>
                 <div className="my-4 border-t border-gray-200 w-full max-w-md"></div>
                 
-                    <div className=" overflow-y-scroll h-[400px] no-scrollbar">
+                    <div className=" overflow-y-scroll h-[400px] ">
+                    {/* no-scrollbar */}
                     {
                          products.map((product: Product)=>{ 
                             return(
                                 <div className="">
-                                    <ProductItem product= {product}/>
+                                    <ProductItem product= {product} key={product.id}/>
                                     <div className="my-4 border-t border-gray-200 w-full max-w-md"/>
                                 </div>    
                                 
