@@ -6,7 +6,7 @@ import { Variant } from "../types/Variant";
 interface productContextProps{
     products : Product[];
     dispatch: Dispatch<Action>;
-    getSelectedProducts : () => Product[];
+    getSelectedProduct : () => Product;
     getSelectedVariants: () => Variant[];
     setProducts: (p : Product[]) =>void
 };
@@ -15,26 +15,27 @@ interface productProviderProps{
     children: ReactNode;
 }
 
+const initialProduct  = {
+    id: "0",
+    title: "",
+    variants: [],
+    image: {
+        id: "",
+        product_id: "",
+        src: ""
+    },
+    selected: false,
+    partial: false
+};
 
 export const initialProducts: Product[] = [
-    {
-        id: "0",
-        title: "",
-        variants: [],
-        image: {
-            id: "",
-            product_id: "",
-            src: ""
-        },
-        selected: false,
-        partial: false
-    }
+    initialProduct
 ];
 
 export const ProductContext = createContext<productContextProps>({
     products: initialProducts,
     dispatch: () => null,
-    getSelectedProducts: () => [],
+    getSelectedProduct: () => initialProduct,
     getSelectedVariants: () => [],
     setProducts: (p: Product[]) => {}
 });
@@ -44,8 +45,11 @@ export const ProductProvider = (productProviderProps: productProviderProps) => {
     const [products, dispatch] = useReducer(productReducer, initialProducts);
     const {children} = productProviderProps;
 
-    const getSelectedProducts = () => {
-        return products.filter(product => product.selected || product.partial)
+    const getSelectedProduct = () => {
+        const selectedProduct =  productReducer(products, { type: 'GET_SELECTED_PRODUCT' })[0];
+        console.log(selectedProduct);
+        return selectedProduct;
+        
     };
 
     const getSelectedVariants = () => {
@@ -67,7 +71,7 @@ export const ProductProvider = (productProviderProps: productProviderProps) => {
         <ProductContext.Provider value={{
             products,
             dispatch,
-            getSelectedProducts,
+            getSelectedProduct,
             getSelectedVariants,
             setProducts
         }}>

@@ -2,17 +2,17 @@
 import { useState } from "react";
 import ProductModal from "../components/ProductModal";
 import useProducts from "../hooks/useProducts";
+import ProductList from "../components/ProductList";
 
 
 const Products = () => {
-    const {products, getSelectedProducts, getSelectedVariants} = useProducts();
+    const {products} = useProducts();
     const [isOpen, setIsOpen] = useState<boolean>(false);
 
     const handleAdd = () => {
         setIsOpen((prev) => !prev);
     }
 
-    const selectedProducts = getSelectedProducts();
 
     
 
@@ -26,10 +26,9 @@ const Products = () => {
                 />
             <h1>Products</h1>
             <div>
-                {selectedProducts.map((product) => (
-                    <p>{product.title}</p>
-                ))}
+               
             </div>
+            <ProductList/>
             
         </>
     )

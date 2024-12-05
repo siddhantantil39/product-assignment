@@ -5,7 +5,7 @@ import { Variant } from "../types/Variant";
 export type Action = 
   {type: 'TOGGLE_PRODUCT'; productId: string}
 | {type: 'UPDATE_VARIANT'; productId: string; variantId: string}
-| {type: 'GET_SELECTED_PRODUCTS'}
+| {type: 'GET_SELECTED_PRODUCT'; }
 | {type: 'GET_SELECTED_VARIANTS'}
 | {type: 'SET_PRODUCTS'; payload: Product[]}
 
@@ -54,6 +54,10 @@ export const productReducer : Reducer<Product[], Action> = (products: Product[],
 
         case 'SET_PRODUCTS':            
             return action.payload;
+
+        case 'GET_SELECTED_PRODUCT':
+            return products.filter((product) => product.selected || product.partial);
+
 
         default: products;
 
