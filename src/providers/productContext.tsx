@@ -39,7 +39,7 @@ export const ProductContext = createContext<productContextProps>({
     dispatch: () => null,
     getSelectedProduct: () => initialProduct,
     getSelectedVariants: () => [],
-    setProducts: (p: Product[]) => {}
+    setProducts: () => {}
 });
 
 export const ProductProvider = (productProviderProps: productProviderProps) => {

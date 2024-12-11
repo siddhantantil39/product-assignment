@@ -1,7 +1,6 @@
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { Variant } from '../types/Variant';
 import drag from '../assets/drag.png'
-import DiscountCard from './DiscountCard';
 import { useState } from 'react';
 
 interface VariantCardProps {

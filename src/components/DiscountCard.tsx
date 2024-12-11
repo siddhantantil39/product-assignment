@@ -1,13 +1,8 @@
 import { ChangeEvent, useState } from "react";
-import { Product } from "../types/Product";
-import { Variant } from "../types/Variant";
 
-interface ProductCardProps  {
-    product: Product | Variant;
-    discount: number;
-}
 
-const DiscountCard = (productCardProps : ProductCardProps) => {
+
+const DiscountCard = () => {
 
     const [discountFlag, setDiscountFlag] = useState(false);
     const [discountValue, setDiscountValue] = useState<string|number>("10");
@@ -21,7 +16,7 @@ const DiscountCard = (productCardProps : ProductCardProps) => {
              ? 
              <div className="px-6">
                 <button 
-                    className="flex items-center border-2 border-white text-white bg-[#008060] px-4 py-2" onClick={(flag) => setDiscountFlag(true)}>
+                    className="flex items-center border-2 border-white text-white bg-[#008060] px-4 py-2" onClick={() => setDiscountFlag(true)}>
                     Add Discount
                 </button>
              </div>

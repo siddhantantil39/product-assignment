@@ -1,4 +1,4 @@
-import { ChangeEvent, Dispatch, SetStateAction, useState } from "react";
+import { ChangeEvent, Dispatch, SetStateAction } from "react";
 
 export interface SearchProps{
     query: string;
@@ -11,7 +11,7 @@ const SearchProducts = (searchProps: SearchProps) => {
     const onChangeQuery = (e: ChangeEvent<HTMLInputElement>) => {
         setQuery(e.target.value);
     }
-    
+
     return(
         <>
             <form className="max-w-md mx-auto">   

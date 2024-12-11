@@ -15,7 +15,6 @@ const ProductList: React.FC = () => {
   const [offerTimerEnabled, setOfferTimerEnabled] = useState(false);
   const { products, setProducts } = useProducts();
   const [selectedProducts, setSelectedProducts] = useState(initialProducts);
-  const [showVariants, setShowVariants] = useState(false);
   const [selectedProductId, setSelectedProductId] = useState<string | null>(null);
 
 
@@ -52,7 +51,6 @@ const ProductList: React.FC = () => {
   };
 
   const onClickVariants = (product: Product) => {
-    setShowVariants((prev) => !prev);
     setSelectedProductId(product.id);
   };
 
@@ -135,7 +133,7 @@ const ProductList: React.FC = () => {
                             />
                           )}
                         </div>
-                        <DiscountCard product={product} discount={10} />
+                        <DiscountCard />
 
                       </div>
                       <div className="cursor-pointer ml-[652.5px] flex items-center space-x-1"  onClick={() => onClickVariants(product)}>
