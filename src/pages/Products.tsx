@@ -4,16 +4,7 @@ import ProductList from "../components/ProductList";
 
 
 const Products = () => {
-
-    
-
-    return(
-        <>
-            
-            <ProductList/>
-            
-        </>
-    )
+    return(<ProductList/>);
 };
 
 export default Products;

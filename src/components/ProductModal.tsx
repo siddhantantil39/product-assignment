@@ -60,7 +60,7 @@ const ProductModal: React.FC<ModalProps> = ({ isOpen, onClose, setSelectedProduc
 
     const handleModalClose = (e: React.MouseEvent) => {
         e.preventDefault();
-        e.stopPropagation();
+        setSelectedProducts((prev) => [...prev,...[]]);
         onClose();
     };
 
@@ -76,7 +76,7 @@ const ProductModal: React.FC<ModalProps> = ({ isOpen, onClose, setSelectedProduc
 
     return (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-            <div className="relative bg-white rounded-lg shadow-lg w-[800px] max-w-md h-[600px] p-6">
+            <div className="relative bg-white rounded-lg shadow-lg w-[1400px] max-w-lg h-[600px] p-6">
                 <h3 className="absolute top-3 left-3 text-md font-semibold text-gray-800">Add Products</h3>
                 <button 
                     className="absolute top-3 right-3 text-gray-500 hover:text-gray-700 focus:outline-none" 
@@ -118,13 +118,13 @@ const ProductModal: React.FC<ModalProps> = ({ isOpen, onClose, setSelectedProduc
                 
                 <div className="mt-6 flex justify-end space-x-2">
                     <button 
-                        className="px-4 py-2 bg-gray-200 text-gray-800 text-sm rounded-md hover:bg-gray-300 focus:outline-none"
+                        className="flex items-center border-2 border-[#008060] text-[#008060] bg-white px-4 py-2"
                         onClick={handleModalClose}
                     >
                         Cancel
                     </button>
                     <button 
-                        className="px-4 py-2 bg-blue-500 text-white text-sm rounded-md hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-300"
+                        className="flex items-center border-2 border-white text-white bg-[#008060] px-4 py-2"
                         onClick={handleAddProduct}
                     >
                         Add

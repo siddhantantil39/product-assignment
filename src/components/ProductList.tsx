@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { Info, Plus, Trash2 } from 'lucide-react';
+import React, { useState } from 'react';
+import { Info } from 'lucide-react';
 import ProductModal from './ProductModal';
 import useProducts from '../hooks/useProducts';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
@@ -8,6 +8,7 @@ import edit from '../assets/Edit.png';
 import VariantCard from './VariantCard';
 import DiscountCard from './DiscountCard';
 import { initialProducts } from '../providers/productContext';
+import { Product } from '../types/Product';
 
 const ProductList: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -42,8 +43,6 @@ const ProductList: React.FC = () => {
     const [reorderedProduct] = updatedSelectedProducts.splice(result.source.index, 1);
     updatedSelectedProducts.splice(result.destination.index, 0, reorderedProduct);
 
-
-
     setSelectedProducts(updatedSelectedProducts);
   };
 
@@ -52,10 +51,11 @@ const ProductList: React.FC = () => {
     e.stopPropagation();
   };
 
-  const removeProduct = ( productId: string) => {
-    const filteredProducts  = selectedProducts.filter((product) => product.id !== productId);
-    setSelectedProducts(filteredProducts);
+  const onClickVariants = (product: Product) => {
+    setShowVariants((prev) => !prev);
+    setSelectedProductId(product.id);
   };
+
 
   return (
     <div className="bg-gray-100 p-6">
@@ -75,7 +75,7 @@ const ProductList: React.FC = () => {
           </div>
         </div>
 
-        <p className="text-yellow-500 py-4">
+        <p className="text-black-500 py-4 text-left">
           Offer Bundle will be shown to the customer whenever any of the bundle
           products are added to the cart.
         </p>
@@ -136,20 +136,13 @@ const ProductList: React.FC = () => {
                           )}
                         </div>
                         <DiscountCard product={product} discount={10} />
-                        <div className="delete">
-                            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" onClick={() => removeProduct(product.id)}>
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                            </svg>
-                        </div>
+
                       </div>
-                      <div 
-                        className="cursor-pointer ml-[652.5px] flex items-center space-x-1" 
-                        onClick={() => setShowVariants((prev) => !prev)}
-                      >
-                        <span>{showVariants ? "Hide" : "Show"} variants</span>
+                      <div className="cursor-pointer ml-[652.5px] flex items-center space-x-1"  onClick={() => onClickVariants(product)}>
+                        <span>{ product.id ===selectedProductId ? "Hide" : "Show"} variants</span>
                         <svg 
                           xmlns="http://www.w3.org/2000/svg" 
-                          className={`h-6 w-6 transform ${showVariants ? 'rotate-180' : ''}`} 
+                          className={`h-6 w-6 transform ${product.id ===selectedProductId  ? 'rotate-180' : ''}`} 
                           fill="none" 
                           viewBox="0 0 24 24" 
                           stroke="currentColor"
@@ -162,7 +155,7 @@ const ProductList: React.FC = () => {
                           />
                         </svg>
                       </div>
-                      {showVariants && <VariantCard variants={product.variants || []} />}
+                      {product.id === selectedProductId && <VariantCard variants={product.variants || []} />}
                     </div>
                   )}
                 </Draggable>
@@ -173,12 +166,11 @@ const ProductList: React.FC = () => {
         </Droppable>
       </DragDropContext>
 
-      <div className="flex items-center mt-4">
+      <div className="flex justify-end items-center mt-4">
         <button 
           onClick={handleAddProduct}
-          className="flex items-center bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition-colors"
-        >
-          <Plus className="mr-2" /> Add Product
+          className="flex items-center border-2 border-[#008060] text-[#008060] bg-white px-4 py-2  hover:bg-[#008060] hover:text-white transition-colors ">
+            Add Product
         </button>
       </div>
 

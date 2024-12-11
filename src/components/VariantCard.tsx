@@ -10,23 +10,22 @@ interface VariantCardProps {
 
 const VariantCard = (variantCardProps: VariantCardProps) => {
     const {variants} = variantCardProps;
-
     const [v, setVariants] = useState(variants);
+
+    const removeVariant = ( variantId: string) => {
+        const filteredProducts  = v.filter((v) => v.id !== variantId);
+        setVariants(filteredProducts);
+      };
+
     return (
         <>
             <DragDropContext onDragEnd={(result)=>{
                 if (!result.destination) return;
     
-                const updatedSelectedProducts = Array.from(variants);
-                const [reorderedProduct] = updatedSelectedProducts.splice(result.source.index, 1);
-                updatedSelectedProducts.splice(result.destination.index, 0, reorderedProduct);
-    
-                const updatedProducts = variants.map(variant => {
-                const foundInSelected = updatedSelectedProducts.find(p => p.id === variant.id);
-                return foundInSelected ? foundInSelected : variant;
-                });
-    
-                setVariants(updatedProducts);
+                const updatedVariants = Array.from(variants);
+                const [reorderedProduct] = updatedVariants.splice(result.source.index, 1);
+                updatedVariants.splice(result.destination.index, 0, reorderedProduct);
+                setVariants(updatedVariants);
           }}>
             <Droppable droppableId="selected-products">
               {(provided) => (
@@ -35,7 +34,7 @@ const VariantCard = (variantCardProps: VariantCardProps) => {
                   {...provided.droppableProps}
                   ref={provided.innerRef}
                 >
-                  {variants.map((variant, index) => (
+                  {v.map((variant, index) => (
                     <Draggable 
                       key={variant.id} 
                       draggableId={`variant-${variant.id}`} 
@@ -43,7 +42,7 @@ const VariantCard = (variantCardProps: VariantCardProps) => {
                     >
                       {(provided) => (
                         <div className="flex flex-col items-center space-y-4">
-                                                <div className="flex items-center">
+                            <div className="flex items-center">
                             <div 
                             {...provided.dragHandleProps} 
                             className="flex items-center space-x-4 cursor-move w-60 flex-shrink-0 rounded-lg"
@@ -57,19 +56,18 @@ const VariantCard = (variantCardProps: VariantCardProps) => {
                                 >
                                     <input
                                         type="text"
-                                        placeholder="Select Product"
-                                        className=" border-gray-300 rounded py-2 px-3 mr-4 focus:outline-none focus:ring focus:border-green-500 rounded-lg"
+                                        className=" border-gray-300 py-2 px-3 mr-4 focus:outline-none focus:ring focus:border-green-500 rounded-lg"
                                         value={variant.title}
-                                        // onChange={(e) => handleProductChange(index, e.target.value)}
                                         />
+                                    
                                 </div>
-                                <DiscountCard product={variant} discount={10} />
-    
+                                <div className="delete px-6">
+                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" onClick={() => removeVariant(variant.id)}>
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
+                                </div>
                             </div>
-    
                         </div>
-    
-    
                       )}
                     </Draggable>
                   ))}
