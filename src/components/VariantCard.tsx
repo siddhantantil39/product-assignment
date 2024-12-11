@@ -1,4 +1,4 @@
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import { DragDropContext, Droppable, Draggable, DropResult, DroppableProvided, DraggableProvided } from 'react-beautiful-dnd';
 import { Variant } from '../types/Variant';
 import drag from '../assets/drag.png'
 import { useState } from 'react';
@@ -18,7 +18,7 @@ const VariantCard = (variantCardProps: VariantCardProps) => {
 
     return (
         <>
-            <DragDropContext onDragEnd={(result)=>{
+            <DragDropContext onDragEnd={(result: DropResult)=>{
                 if (!result.destination) return;
     
                 const updatedVariants = Array.from(variants);
@@ -27,7 +27,7 @@ const VariantCard = (variantCardProps: VariantCardProps) => {
                 setVariants(updatedVariants);
           }}>
             <Droppable droppableId="selected-products">
-              {(provided) => (
+              {(provided: DroppableProvided) => (
                 <div 
                   className="space-y-4"
                   {...provided.droppableProps}
@@ -39,7 +39,7 @@ const VariantCard = (variantCardProps: VariantCardProps) => {
                       draggableId={`variant-${variant.id}`} 
                       index={index}
                     >
-                      {(provided) => (
+                      {(provided: DraggableProvided) => (
                         <div className="flex flex-col items-center space-y-4">
                             <div className="flex items-center">
                             <div 

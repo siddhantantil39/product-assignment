@@ -8,5 +8,6 @@ export interface Product {
     image: Image;
     selected: boolean;
     partial: boolean;
+    showVariants?: false;
 
 }

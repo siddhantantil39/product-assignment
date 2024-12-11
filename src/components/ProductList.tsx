@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Info } from 'lucide-react';
 import ProductModal from './ProductModal';
 import useProducts from '../hooks/useProducts';
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import { DragDropContext, Droppable, Draggable, DroppableProvided, DraggableProvided } from 'react-beautiful-dnd';
 import drag from '../assets/drag.png';
 import edit from '../assets/Edit.png';
 import VariantCard from './VariantCard';
@@ -52,6 +52,11 @@ const ProductList: React.FC = () => {
 
   const onClickVariants = (product: Product) => {
     setSelectedProductId(product.id);
+    const productId = product.id;
+    const showVariantsValue = product.showVariants;
+    selectedProducts.map((product: Product) => {
+        product.id === productId ? { ...product, showVariants: !showVariantsValue} : product
+    })
   };
 
 
@@ -81,7 +86,7 @@ const ProductList: React.FC = () => {
 
       <DragDropContext onDragEnd={onDragEnd}>
         <Droppable droppableId="selected-products">
-          {(provided) => (
+          {(provided: DroppableProvided) => (
             <div 
               className="space-y-4"
               {...provided.droppableProps}
@@ -93,7 +98,7 @@ const ProductList: React.FC = () => {
                   draggableId={`product-${product.id}`} 
                   index={index}
                 >
-                  {(provided) => (
+                  {(provided: DraggableProvided) => (
                     <div className="flex flex-col items-center space-y-4">
                       <div className="flex items-center">
                         <div 
@@ -137,10 +142,10 @@ const ProductList: React.FC = () => {
 
                       </div>
                       <div className="cursor-pointer ml-[652.5px] flex items-center space-x-1"  onClick={() => onClickVariants(product)}>
-                        <span>{ product.id ===selectedProductId ? "Hide" : "Show"} variants</span>
+                        <span>{ product.showVariants ? "Hide" : "Show"} variants</span>
                         <svg 
                           xmlns="http://www.w3.org/2000/svg" 
-                          className={`h-6 w-6 transform ${product.id ===selectedProductId  ? 'rotate-180' : ''}`} 
+                          className={`h-6 w-6 transform ${product.showVariants ? 'rotate-180' : ''}`} 
                           fill="none" 
                           viewBox="0 0 24 24" 
                           stroke="currentColor"
@@ -153,7 +158,7 @@ const ProductList: React.FC = () => {
                           />
                         </svg>
                       </div>
-                      {product.id === selectedProductId && <VariantCard variants={product.variants || []} />}
+                      {product.showVariants && <VariantCard variants={product.variants || []} />}
                     </div>
                   )}
                 </Draggable>

@@ -38,16 +38,15 @@ export const productReducer : Reducer<Product[], Action> = (products: Product[],
                         : variant
                     );
 
-                    const allSelected = updatedVariants?.every(variant => variant.selected);
-                    const someSelected = updatedVariants?.some(variant => variant.selected);
+                    const allSelected = updatedVariants?.every(variant => variant.selected === true);
+                    const someSelected = updatedVariants?.some(variant => variant.selected === true);
 
-                    if(allSelected!=undefined && someSelected!=undefined)
+                    
                     return{
                         ...product,
                         variants: updatedVariants,
-                        selected: allSelected,
-                        partial: someSelected && !allSelected
-                        
+                        selected: allSelected ||false,
+                        partial: someSelected && !allSelected || false
                     };
                 }
                 return product;

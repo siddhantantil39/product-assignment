@@ -22,7 +22,7 @@ const ProductItem = (productItemProps : productItemProps) => {
                             <Check className="text-green-500 mr-2" />
                         ) : product.partial ? 
                         (
-                        <Minus className="text-yellow-500 mr-2" />
+                            <Minus className="text-yellow-500 mr-2" />
                         ) : 
                         (
                             <Square className="text-gray-400 mr-2" />
@@ -41,18 +41,16 @@ const ProductItem = (productItemProps : productItemProps) => {
                 {
                     product.variants?.map((variant: Variant) => (
                         <>
-                            <div 
-                                key={variant.id} 
-                                onClick={() => dispatch({ 
-                                type: 'UPDATE_VARIANT', 
-                                productId: product.id, 
-                                variantId: variant.id 
-                                })}
-                            >
-                            </div>
                             <ul className="divide-y">
                                 <li className="py-4 px-10 flex items-center">
-                                     <div>
+                                    <div 
+                                        key={variant.id} 
+                                        onClick={() => dispatch({ 
+                                        type: 'UPDATE_VARIANT', 
+                                        productId: product.id, 
+                                        variantId: variant.id 
+                                        })}
+                                    >
                                         {variant.selected ? (
                                         <Check className="text-green-500 mr-2" />
                                         ) : (
