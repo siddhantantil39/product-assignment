@@ -53,10 +53,13 @@ const ProductList: React.FC = () => {
   const onClickVariants = (product: Product) => {
     setSelectedProductId(product.id);
     const productId = product.id;
-    const showVariantsValue = product.showVariants;
-    selectedProducts.map((product: Product) => {
-        product.id === productId ? { ...product, showVariants: !showVariantsValue} : product
-    })
+    const showVariantsValue = !product.showVariants;
+    const updatedProducts  = selectedProducts.map((product: Product) => 
+       product.id === productId ? { ...product, showVariants: showVariantsValue} : product
+    )
+    setSelectedProducts(updatedProducts);
+    console.log(selectedProducts);
+    
   };
 
 
