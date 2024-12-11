@@ -20,7 +20,7 @@ export const productReducer : Reducer<Product[], Action> = (products: Product[],
                         ...product,
                         selected : selected,
                         partial: false,
-                        variants: product.variants.map((variant: Variant) => ({
+                        variants: product.variants?.map((variant: Variant) => ({
                             ...variant,
                             selected: selected
                         }))
@@ -32,15 +32,16 @@ export const productReducer : Reducer<Product[], Action> = (products: Product[],
         case 'UPDATE_VARIANT':
             return products.map(product => {
                 if(product.id === action.productId){
-                    const updatedVariants = product.variants.map(variant => 
+                    const updatedVariants = product.variants?.map(variant => 
                         variant.id === action.variantId
                         ? {...variant, selected: variant.selected === null ? true : !variant.selected}
                         : variant
                     );
 
-                    const allSelected = updatedVariants.every(variant => variant.selected);
-                    const someSelected = updatedVariants.some(variant => variant.selected);
+                    const allSelected = updatedVariants?.every(variant => variant.selected);
+                    const someSelected = updatedVariants?.some(variant => variant.selected);
 
+                    if(allSelected!=undefined && someSelected!=undefined)
                     return{
                         ...product,
                         variants: updatedVariants,

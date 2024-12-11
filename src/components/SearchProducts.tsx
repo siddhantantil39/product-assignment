@@ -11,7 +11,7 @@ const SearchProducts = (searchProps: SearchProps) => {
     const onChangeQuery = (e: ChangeEvent<HTMLInputElement>) => {
         setQuery(e.target.value);
     }
-
+    
     return(
         <>
             <form className="max-w-md mx-auto">   

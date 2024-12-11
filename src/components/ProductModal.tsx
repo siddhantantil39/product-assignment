@@ -1,116 +1,138 @@
-import { ReactNode, useEffect, useState } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import SearchProducts from "./SearchProducts";
-import { Product } from "../types/Product";
 import ProductItem from "./ProductItem";
-import { debounce } from 'lodash';
 import { useDebounce } from "../hooks/useDebounce";
 import useProducts from "../hooks/useProducts";
-import { initialProducts } from "../providers/productContext";
-
-
+import { Product } from "../types/Product";
 
 interface ModalProps {
     isOpen: boolean,
-    onClose: any,
-    children: ReactNode
-};
+    onClose: () => void,
+    selectedProducts: Product[],
+    setSelectedProducts: Dispatch<SetStateAction<Product[]>>
+}
 
-const ProductModal = (modalProps: ModalProps) => {
-
-    const {isOpen, onClose, children} = modalProps;
+const ProductModal: React.FC<ModalProps> = ({ isOpen, onClose, setSelectedProducts }) => {
     const [query, setQuery] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
     const debouncedQuery = useDebounce(query, 500);
 
-    // const [products, setProducts] = useState<Product[]>(initialProducts);
-    const {products,setProducts} = useProducts();
-
+    const { products, setProducts } = useProducts();
 
     const getProducts = async () => {
-        const response = fetch('https://stageapi.monkcommerce.app/task/products/search?' + new URLSearchParams({
-            search: debouncedQuery, page: '0', limit: '10'
-        }).toString(), {
-            method: 'GET',
-            headers: {
-                "x-api-key": "72njgfa948d9aS7gs5"
+        if (!debouncedQuery) return;
+
+        setIsLoading(true);
+        try {
+            const response = await fetch(`https://stageapi.monkcommerce.app/task/products/search?${new URLSearchParams({
+                search: debouncedQuery,
+                page: '0',
+                limit: '10'
+            }).toString()}`, {
+                method: 'GET',
+                headers: {
+                    "x-api-key": "72njgfa948d9aS7gs5"
+                }
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                setProducts(data);
+            } else {
+                console.error("Failed to fetch products");
+                setProducts([]);
             }
+        } catch (error) {
+            console.error("Error in fetching Products", error);
+            setProducts([]);
+        } finally {
+            setIsLoading(false);
         }
-        );
-
-        await response
-        .then((res) => {
-            if(res.ok) return res.json();
-        })
-        .then((data) => {
-            setProducts(data);
-        })
-        .catch(() =>{
-            console.log("Error in fetching Products")
-        });
-
     };
 
-    useEffect(()=>{
-        if(debouncedQuery){
+    useEffect(() => {
+        if (debouncedQuery) {
             getProducts();
+        } else {
+            setProducts([]);
         }
     }, [debouncedQuery]);
 
-    if(!isOpen) return null;
+    const handleModalClose = (e: React.MouseEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+        onClose();
+    };
 
+    const handleAddProduct = (e: React.MouseEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const selectedProducts  = products.filter((p) => p.selected || p.partial);
+        setSelectedProducts((prev) => [...prev,...selectedProducts]);
+        onClose();
+    };
 
-    return(
-        <>
-            <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-            <div className="relative bg-white rounded-lg shadow-lg w-[800px] max-w-md  h-[600px] p-6">
-            <h3 className="absolute top-3 left-3 text-md font-semibold text-gray-800">Add Products</h3>
+    if (!isOpen) return null;
+
+    return (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+            <div className="relative bg-white rounded-lg shadow-lg w-[800px] max-w-md h-[600px] p-6">
+                <h3 className="absolute top-3 left-3 text-md font-semibold text-gray-800">Add Products</h3>
                 <button 
-                className="absolute top-3 right-3 text-gray-500 hover:text-gray-700 focus:outline-none" 
-                onClick={onClose}
+                    className="absolute top-3 right-3 text-gray-500 hover:text-gray-700 focus:outline-none" 
+                    onClick={handleModalClose}
                 >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                </svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
                 </button>
                 <div className="my-4 border-t border-gray-200 w-full max-w-md"></div>
-                <SearchProducts query={query} setQuery={setQuery}/>
+                
+                <SearchProducts 
+                    query={query} 
+                    setQuery={(newQuery) => {
+                        // Prevent default form submission
+                        if (window.event) {
+                            window.event.preventDefault();
+                        }
+                        setQuery(newQuery);
+                    }}
+                />
+                
                 <div className="my-4 border-t border-gray-200 w-full max-w-md"></div>
                 
-                    <div className=" overflow-y-scroll h-[400px] ">
-                    {/* no-scrollbar */}
-                    {
-                         products.map((product: Product)=>{ 
-                            return(
-                                <div className="">
-                                    <ProductItem product= {product} key={product.id}/>
-                                    <div className="my-4 border-t border-gray-200 w-full max-w-md"/>
-                                </div>    
-                                
-                        )
-                    })
-                    }    
-                   
+                <div className="overflow-y-scroll h-[400px]">
+                    {isLoading ? (
+                        <div className="text-center py-4">Loading...</div>
+                    ) : products.length > 0 ? (
+                        products.map((product, index) => (
+                            <div key={product.id || index}>
+                                <ProductItem product={product} />
+                                <div className="my-4 border-t border-gray-200 w-full max-w-md"/>
+                            </div>
+                        ))
+                    ) : (
+                        <div className="text-center py-4">No products found</div>
+                    )}
                 </div>
                 
-                <div className="mt-6 flex justify-end">
-                <button 
-                    className="px-4 py-2 bg-blue-500 text-white text-sm rounded-md hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-300"
-                    onClick={onClose}
+                <div className="mt-6 flex justify-end space-x-2">
+                    <button 
+                        className="px-4 py-2 bg-gray-200 text-gray-800 text-sm rounded-md hover:bg-gray-300 focus:outline-none"
+                        onClick={handleModalClose}
                     >
-                    Cancel
-                </button>
-                <button 
-                    className="px-4 py-2 bg-blue-500 text-white text-sm rounded-md hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-300"
-                    onClick={onClose}
+                        Cancel
+                    </button>
+                    <button 
+                        className="px-4 py-2 bg-blue-500 text-white text-sm rounded-md hover:bg-blue-600 focus:outline-none focus:ring focus:ring-blue-300"
+                        onClick={handleAddProduct}
                     >
-                    Add
-                </button>
+                        Add
+                    </button>
                 </div>
             </div>
-            </div>
-
-
-        </>
-    )
+        </div>
+    );
 };
 
 export default ProductModal;

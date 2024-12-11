@@ -9,7 +9,7 @@ export interface productItemProps {
 
 const ProductItem = (productItemProps : productItemProps) => {
     const {product} = productItemProps;
-    const {dispatch,} = useProducts();
+    const {dispatch} = useProducts();
 
     return(
         <>
@@ -31,7 +31,7 @@ const ProductItem = (productItemProps : productItemProps) => {
             </div>
             <div className="my-4 border-t border-gray-200 w-full max-w-md hover:bg-gray-700" ></div>
                 {
-                    product.variants.map((variant: Variant) => (
+                    product.variants?.map((variant: Variant) => (
                         <>
                             <div className="variant flex flex-row space-x-4">
                             <div 

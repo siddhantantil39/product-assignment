@@ -17,14 +17,16 @@ interface productProviderProps{
 
 const initialProduct  = {
     id: "0",
-    title: "",
-    variants: [],
+    title: "Select Product",
+    variants: [
+       
+    ],
     image: {
         id: "",
         product_id: "",
         src: ""
     },
-    selected: false,
+    selected: true,
     partial: false
 };
 
@@ -55,7 +57,9 @@ export const ProductProvider = (productProviderProps: productProviderProps) => {
     const getSelectedVariants = () => {
          let variants : Variant[]= [];   
          products.map(product => {
-            variants = product.variants.filter(variant => variant.selected)
+            if(product.variants){
+                variants = product.variants.filter(variant => variant.selected)
+            }
          });
          return variants;
     };
