@@ -57,14 +57,14 @@ const VariantCard = (variantCardProps: VariantCardProps) => {
                                         type="text"
                                         className=" border-gray-300 py-2 px-3 mr-4 focus:outline-none focus:ring focus:border-green-500 rounded-lg"
                                         value={variant.title}
-                                        />
+                                      />
                                     
                                 </div>
-                                <div className="delete px-6">
+                                <button className="delete px-6">
                                     <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" onClick={() => removeVariant(variant.id)}>
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                                     </svg>
-                                </div>
+                                </button>
                             </div>
                         </div>
                       )}

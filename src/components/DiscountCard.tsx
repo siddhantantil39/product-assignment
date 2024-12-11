@@ -14,7 +14,7 @@ const DiscountCard = () => {
         <>
             {!discountFlag
              ? 
-             <div className="px-6">
+             <div className="">
                 <button 
                     className="flex items-center border-2 border-white text-white bg-[#008060] px-4 py-2" onClick={() => setDiscountFlag(true)}>
                     Add Discount

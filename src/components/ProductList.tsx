@@ -64,28 +64,34 @@ const ProductList: React.FC = () => {
 
 
   return (
-    <div className="bg-gray-100 p-6">
-      <div className='grid grid-cols-1 divide-y-[2px] mb-6'>
-        <div>
-          <h3 className="text-lg font-semibold">Video Reviews</h3>
-        </div>
-        <div className="flex justify-between items-center py-4">
-          <h2 className="text-2xl font-bold">Offer Funnel</h2>
+    <div className="bg-gray-100 p-4">
+      <div className="max-w-screen-lg mx-auto">
+        <div className='grid grid-cols-1 divide-y-[2px] mb-6'>
           <div>
-            <a href="#" className="text-gray-500 underline mr-4">
-              Support |
-            </a>
-            <a href="#" className="text-gray-500 underline">
-              Talk to an Expert
-            </a>
+            <h3 className="text-lg font-semibold">Video Reviews</h3>
+          </div>
+          <div className="flex justify-between items-center py-4">
+            <h2 className="text-2xl font-bold">Offer Funnel</h2>
+            <div>
+              <a href="#" className="text-gray-500 underline mr-4">
+                Support |
+              </a>
+              <a href="#" className="text-gray-500 underline">
+                Talk to an Expert
+              </a>
+            </div>
+          </div>
+
+          <div className='flex flex-row py-4 '>
+            <Info size={22} className="mr-2 text-yellow-500"/> 
+            <p className="text-black-500 ">
+                Offer Bundle will be shown to the customer whenever any of the bundle
+              products are added to the cart.
+            </p>
           </div>
         </div>
-
-        <p className="text-black-500 py-4 text-left">
-          Offer Bundle will be shown to the customer whenever any of the bundle
-          products are added to the cart.
-        </p>
       </div>
+
 
       <DragDropContext onDragEnd={onDragEnd}>
         <Droppable droppableId="selected-products">
@@ -141,26 +147,29 @@ const ProductList: React.FC = () => {
                             />
                           )}
                         </div>
-                        <DiscountCard />
+                        <div className="flex flex-col items-start mt-8 ml-4 space-y-2">
+                          <DiscountCard />
+                          <div
+                            className="cursor-pointer flex items-center space-x-2" onClick={() => onClickVariants(product)}>
+                            <span>{product.showVariants ? "Hide" : "Show"} variants</span>
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              className={`h-6 w-6 transform ${product.showVariants ? "rotate-180" : ""}`}
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M19 9l-7 7-7-7"
+                              />
+                            </svg>
+                          </div>
+                        </div>
+                      </div>
 
-                      </div>
-                      <div className="cursor-pointer ml-[652.5px] flex items-center space-x-1"  onClick={() => onClickVariants(product)}>
-                        <span>{ product.showVariants ? "Hide" : "Show"} variants</span>
-                        <svg 
-                          xmlns="http://www.w3.org/2000/svg" 
-                          className={`h-6 w-6 transform ${product.showVariants ? 'rotate-180' : ''}`} 
-                          fill="none" 
-                          viewBox="0 0 24 24" 
-                          stroke="currentColor"
-                        >
-                          <path 
-                            strokeLinecap="round" 
-                            strokeLinejoin="round" 
-                            strokeWidth={2} 
-                            d="M19 9l-7 7-7-7" 
-                          />
-                        </svg>
-                      </div>
                       {product.showVariants && <VariantCard variants={product.variants || []} />}
                     </div>
                   )}
@@ -209,7 +218,6 @@ const ProductList: React.FC = () => {
       {offerTimerEnabled && (
         <div className="mt-6">
           <h3 className="text-xl font-bold">Offer Timer</h3>
-          {/* Add timer UI here */}
         </div>
       )}
     </div>
